@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "44049953983-m657soq8e66llneqcjphon0v1pqceiod.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.floutask.app",
+            "certificate_hash": "3410ac8e686ada2b511946251f291c0948435f7b"
+          }
+        },
+        {
           "client_id": "44049953983-oinpen6v1pdbvu2ccib7b99bik1dm797.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.floutask.app",
             "certificate_hash": "2b565308325d1af55f61dfb0d5725ca0cd0d546d"
+          }
+        },
+        {
+          "client_id": "44049953983-v8iki85j5ihqi1m88727jgnh935f9hcd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.floutask.app",
+            "certificate_hash": "ccf9c6beac13a605688db6b492e9f89fca215d28"
           }
         },
         {
