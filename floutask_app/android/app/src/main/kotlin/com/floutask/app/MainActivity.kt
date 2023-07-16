@@ -1,4 +1,4 @@
-package com.example.floutask_app
+package com.floutask.app
 
 import io.flutter.embedding.android.FlutterActivity
 
