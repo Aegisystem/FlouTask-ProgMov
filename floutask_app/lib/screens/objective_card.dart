@@ -1,3 +1,4 @@
+import 'package:floutask_app/screens/in_objective.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,7 +28,10 @@ class _ObjectiveCardState extends State<ObjectiveCard> {
       margin: EdgeInsets.only(top: 20.0),
       child: ListTile(
         onTap: () {
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => EditObjective()),
+          );
         },
         leading: Checkbox(
           value: _check,

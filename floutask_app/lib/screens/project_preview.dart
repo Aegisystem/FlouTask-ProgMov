@@ -1,3 +1,4 @@
+import 'package:floutask_app/screens/edit_project.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -32,7 +33,10 @@ class _ProjectPreviewState extends State<ProjectPreview> {
       margin: EdgeInsets.only(top: 20.0),
       child: ListTile(
         onTap: () {
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => EditProject()),
+          );
         },
         title: Text(
           widget.title,
