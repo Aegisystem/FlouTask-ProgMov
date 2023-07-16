@@ -7,22 +7,22 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:44049953983:android:571e3150413f3b5e25c20a",
+        "mobilesdk_app_id": "1:44049953983:android:38eaf5ef7ec7c2c625c20a",
         "android_client_info": {
-          "package_name": "com.example.floutask_app"
+          "package_name": "com.floutask.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "44049953983-2t0puvjqb53a48r6bekfgkahkvk2uhce.apps.googleusercontent.com",
+          "client_id": "44049953983-oinpen6v1pdbvu2ccib7b99bik1dm797.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.floutask_app",
+            "package_name": "com.floutask.app",
             "certificate_hash": "2b565308325d1af55f61dfb0d5725ca0cd0d546d"
           }
         },
         {
-          "client_id": "44049953983-2vd44o6464umsq1524p9gv49se8ovj4b.apps.googleusercontent.com",
+          "client_id": "44049953983-im447e0ts0asr5c6gf946k2gecpni9hr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
