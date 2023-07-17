@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool _isButtonPressed = false;
   final CollectionReference _projectsCollection =
-  FirebaseFirestore.instance.collection('projects');
+      FirebaseFirestore.instance.collection('projects');
 
   void _cerrarSesion() async {
     // Cerrar sesión con FirebaseAuth
@@ -86,7 +86,8 @@ class _HomeState extends State<Home> {
             child: AnimatedContainer(
               duration: Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              transform: Matrix4.identity()..scale(_isButtonPressed ? 1.95 : 1.0),
+              transform: Matrix4.identity()
+                ..scale(_isButtonPressed ? 1.95 : 1.0),
               child: CircleAvatar(
                 radius: 20.0,
                 backgroundColor: Colors.white,
@@ -128,13 +129,15 @@ class _HomeState extends State<Home> {
                     padding: EdgeInsets.only(top: 5),
                     itemCount: projects.length,
                     itemBuilder: (context, index) {
-                      var projectData = projects[index].data() as Map<String, dynamic>;
+                      var projectData =
+                          projects[index].data() as Map<String, dynamic>;
                       return ProjectPreview(
                         title: projectData['projectName'].toString(),
                         progress: projectData['progress'].toDouble(),
                         members: projectData['memberCount'],
                         objectives: projectData['objectives'],
-                        projectID: projects[index].id, user: widget.user,
+                        projectID: projects[index].id,
+                        user: widget.user,
                       );
                     },
                   );
@@ -175,5 +178,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-

@@ -31,7 +31,7 @@ class ObjectiveCard extends StatefulWidget {
 
 class _ObjectiveCardState extends State<ObjectiveCard> {
   bool _isCheck = false;
-  late String data = '';
+  late String data = ' ';
 
   @override
   void initState() {

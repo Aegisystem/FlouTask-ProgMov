@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:floutask_app/screens/in_objective.dart';
 import 'package:floutask_app/screens/objective_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,52 +51,54 @@ class _EditProjectState extends State<EditProject> {
         children: [
           SizedBox(height: 40.0),
           Flexible(
-            flex: 2,
+            flex: 3,
             child: Padding(
               padding: EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  Text(
-                    widget.title,
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.brown,
-                      fontFamily: GoogleFonts.oxygen().fontFamily,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Text(
+                      widget.title,
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.brown,
+                        fontFamily: GoogleFonts.oxygen().fontFamily,
+                      ),
                     ),
-                  ),
-                  LinearPercentIndicator(
-                    alignment: MainAxisAlignment.center,
-                    padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
-                    width: 250.0,
-                    lineHeight: 30.0,
-                    percent: progress,
-                    backgroundColor: Colors.grey,
-                    linearGradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [Colors.brown, Colors.greenAccent],
+                    LinearPercentIndicator(
+                      alignment: MainAxisAlignment.center,
+                      padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
+                      width: 250.0,
+                      lineHeight: 30.0,
+                      percent: progress,
+                      backgroundColor: Colors.grey,
+                      linearGradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [Colors.brown, Colors.greenAccent],
+                      ),
+                      barRadius: const Radius.circular(10.0),
                     ),
-                    barRadius: const Radius.circular(10.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: TextField(
-                      style: TextStyle(color: Colors.brown),
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: 'Busca dentro de tu proyecto :)',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        suffixIcon: Icon(Icons.search, color: Colors.black),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide.none,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      child: TextField(
+                        style: TextStyle(color: Colors.brown),
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: 'Busca dentro de tu objetivo 👹',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          suffixIcon: Icon(Icons.search, color: Colors.black),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -134,7 +135,9 @@ class _EditProjectState extends State<EditProject> {
 
   Future<void> updateObjectiveCheckState(bool isChecked, int index) async {
     try {
-      final projectRef = FirebaseFirestore.instance.collection('projects').doc(widget.projectID);
+      final projectRef = FirebaseFirestore.instance
+          .collection('projects')
+          .doc(widget.projectID);
       final projectDoc = await projectRef.get();
 
       if (projectDoc.exists) {
@@ -143,7 +146,9 @@ class _EditProjectState extends State<EditProject> {
 
         await projectRef.update({'objectives': objectives});
 
-        final int completedObjectives = objectives.where((objective) => objective['isChecked'] == true).length;
+        final int completedObjectives = objectives
+            .where((objective) => objective['isChecked'] == true)
+            .length;
         final double newProgress = completedObjectives / objectives.length;
 
         await projectRef.update({'progress': newProgress});
@@ -154,8 +159,7 @@ class _EditProjectState extends State<EditProject> {
         });
       }
     } catch (e) {
-      print('Error updating objective check state: $e');
+      print('Error updating objective check statee: $e');
     }
   }
-
 }
