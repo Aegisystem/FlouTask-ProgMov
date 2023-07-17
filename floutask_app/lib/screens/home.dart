@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:floutask_app/screens/project_preview.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:floutask_app/screens/project_preview.dart';
 import 'package:floutask_app/screens/createProject.dart';
 import 'package:floutask_app/services/Authenticator.dart';
 import 'login.dart';
@@ -17,47 +18,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool _isButtonPressed = false;
-  var data = [
-    // Resto de los datos del proyecto
-    {
-      'title': 'Estructuras de datos',
-      'description': 'Proyecto de prueba',
-      'progress': 0.8,
-      'members': 5,
-    },
-    {
-      'title': 'Arquitectura de Software',
-      'description': 'Proyecto de prueba',
-      'progress': 0.6,
-      'members': 1,
-    },
-    {
-      'title': 'Estructuras de datos',
-      'description': 'Proyecto de prueba',
-      'progress': 0.8,
-      'members': 5,
-    },
-    {
-      'title': 'Arquitectura de Software',
-      'description': 'Proyecto de prueba',
-      'progress': 0.6,
-      'members': 1,
-    },{
-      'title': 'Estructuras de datos',
-      'description': 'Proyecto de prueba',
-      'progress': 0.8,
-      'members': 5,
-    },
-    {
-      'title': 'Arquitectura de Software',
-      'description': 'Proyecto de prueba',
-      'progress': 0.6,
-      'members': 1,
-    },
-  ];
+  final CollectionReference _projectsCollection =
+  FirebaseFirestore.instance.collection('projects');
 
   void _cerrarSesion() async {
+    // Cerrar sesión con FirebaseAuth
     await Authenticator.cerrarSesion();
+    // Navegar a la pantalla de inicio de sesión
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => Login()),
@@ -131,15 +98,7 @@ class _HomeState extends State<Home> {
 
                     Navigator.push(
                       context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => CreateProject(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          );
-                        },
-                      ),
+                      MaterialPageRoute(builder: (context) => CreateProject()),
                     );
                   },
                 ),
@@ -149,16 +108,37 @@ class _HomeState extends State<Home> {
           SizedBox(height: 12.0),
           Expanded(
             flex: 10,
-            child: ListView.builder(
-              padding: EdgeInsets.only(top: 5),
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                var projectData = data[index];
-                return ProjectPreview(
-                  title: projectData['title'].toString(),
-                  progress: double.parse(projectData['progress'].toString()),
-                  members: int.parse(projectData['members'].toString()),
-                );
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _projectsCollection
+                  .where('userId', isEqualTo: widget.user.uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasData) {
+                  final projects = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    padding: EdgeInsets.only(top: 5),
+                    itemCount: projects.length,
+                    itemBuilder: (context, index) {
+                      var projectData = projects[index].data() as Map<String, dynamic>;
+                      return ProjectPreview(
+                        title: projectData['projectName'].toString(),
+                        progress: projectData['progress'].toDouble(),
+                        members: projectData['memberCount'],
+                      );
+                    },
+                  );
+                }
+
+                return Container();
               },
             ),
           ),
@@ -193,3 +173,5 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+

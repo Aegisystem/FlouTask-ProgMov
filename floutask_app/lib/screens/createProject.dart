@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:floutask_app/screens/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:floutask_app/screens/project_preview.dart';
+import 'login.dart';
 
 class CreateProject extends StatefulWidget {
   const CreateProject({Key? key}) : super(key: key);
@@ -12,11 +14,20 @@ class CreateProject extends StatefulWidget {
 class _CreateProjectState extends State<CreateProject> {
   final List<String> objetivos = [];
   final TextEditingController objetivoController = TextEditingController();
+  final TextEditingController projectNameController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+
+  int selectedMemberCount = 1;
+  List<int> memberCounts = [1, 2, 3, 4, 5];
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final CollectionReference _projectsCollection =
+  FirebaseFirestore.instance.collection('projects');
 
   @override
   void dispose() {
     objetivoController.dispose();
+    projectNameController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -35,6 +46,32 @@ class _CreateProjectState extends State<CreateProject> {
     setState(() {
       objetivos.removeAt(index);
     });
+  }
+
+  Future<void> guardarProyecto() async {
+    Navigator.pop(context);
+
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final String projectName = projectNameController.text;
+      final int progress = 0;
+      final int memberCount = selectedMemberCount;
+
+      final DocumentReference projectRef = await _projectsCollection.add({
+        'userId': user.uid,
+        'projectName': projectName,
+        'progress': progress,
+        'memberCount': memberCount,
+        'objectives': objetivos,
+        'isChecked': false,
+      });
+
+      final String projectId = projectRef.id;
+
+      projectNameController.clear();
+      objetivoController.clear();
+      objetivos.clear();
+    }
   }
 
   @override
@@ -71,6 +108,7 @@ class _CreateProjectState extends State<CreateProject> {
                     ),
                     const SizedBox(height: 30),
                     TextFormField(
+                      controller: projectNameController,
                       style: TextStyle(color: Colors.black),
                       decoration: const InputDecoration(
                         labelText: 'NOMBRE DEL PROYECTO',
@@ -142,6 +180,29 @@ class _CreateProjectState extends State<CreateProject> {
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Icon(Icons.groups, color: Colors.brown),
+                        const SizedBox(width: 10),
+                        DropdownButton<int>(
+                          value: selectedMemberCount,
+                          onChanged: (int? newValue) {
+                            setState(() {
+                              selectedMemberCount = newValue!;
+                            });
+                          },
+                          items: memberCounts.map<DropdownMenuItem<int>>(
+                                (int value) {
+                              return DropdownMenuItem<int>(
+                                value: value,
+                                child: Text(value.toString()),
+                              );
+                            },
+                          ).toList(),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -152,11 +213,7 @@ class _CreateProjectState extends State<CreateProject> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  //Firebase logic
-
-                },
+                onPressed: guardarProyecto,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 18),
                   primary: Colors.green,
@@ -244,3 +301,173 @@ class ObjetivoWidget extends StatelessWidget {
     );
   }
 }
+
+class Home extends StatefulWidget {
+  final User user;
+
+  Home({required this.user});
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  bool _isButtonPressed = false;
+  final CollectionReference _projectsCollection =
+  FirebaseFirestore.instance.collection('projects');
+
+  void _cerrarSesion() async {
+    // Cerrar sesión con FirebaseAuth
+    await FirebaseAuth.instance.signOut();
+    // Navegar a la pantalla de inicio de sesión
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFFE2C6A9),
+      body: Column(
+        children: [
+          SizedBox(height: 40.0),
+          Flexible(
+            flex: 2,
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Image.asset(
+                'assets/images/nameicon.png',
+                scale: 15,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 50.0),
+            child: TextField(
+              style: TextStyle(color: Colors.brown),
+              cursorColor: Colors.black,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: 'Busca en tus proyectos :)',
+                hintStyle: TextStyle(color: Colors.grey),
+                suffixIcon: Icon(Icons.search, color: Colors.black),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 16.0),
+          GestureDetector(
+            onTapDown: (_) {
+              setState(() {
+                _isButtonPressed = true;
+              });
+            },
+            onTapUp: (_) {
+              setState(() {
+                _isButtonPressed = false;
+              });
+            },
+            onTapCancel: () {
+              setState(() {
+                _isButtonPressed = false;
+              });
+            },
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              transform: Matrix4.identity()..scale(_isButtonPressed ? 1.95 : 1.0),
+              child: CircleAvatar(
+                radius: 20.0,
+                backgroundColor: Colors.white,
+                child: IconButton(
+                  icon: Icon(Icons.add_sharp),
+                  color: Colors.brown,
+                  onPressed: () async {
+                    await Future.delayed(const Duration(milliseconds: 200));
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CreateProject()),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 12.0),
+          Expanded(
+            flex: 10,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _projectsCollection
+                  .where('userId', isEqualTo: widget.user.uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasData) {
+                  final projects = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    padding: EdgeInsets.only(top: 5),
+                    itemCount: projects.length,
+                    itemBuilder: (context, index) {
+                      var projectData = projects[index].data() as Map<String, dynamic>;
+                      return ProjectPreview(
+                        title: projectData['projectName'].toString(),
+                        progress: projectData['progress'].toDouble(),
+                        members: projectData['memberCount'],
+                      );
+                    },
+                  );
+                }
+
+                return Container();
+              },
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: Stack(
+        children: [
+          Positioned(
+            bottom: 5.0,
+            left: 30.0,
+            child: InkWell(
+              onTap: _cerrarSesion,
+              child: Container(
+                width: 40.0,
+                height: 40.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40.0),
+                  child: Image.network(
+                    widget.user.photoURL!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+

@@ -50,7 +50,6 @@ class Authenticator {
   static Future<void> cerrarSesion() async {
     FirebaseAuth authenticator = FirebaseAuth.instance;
     GoogleSignIn googleSignIn = GoogleSignIn();
-
     await authenticator.signOut();
     await googleSignIn.signOut();
   }
