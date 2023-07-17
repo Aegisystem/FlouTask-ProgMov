@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ObjectiveCard extends StatefulWidget {
+  final String projectTitle;
   final String title;
-  final String subtitle;
-  final double progress;
+  final String data;
+  final bool navigation;
+  final bool isCheck;
 
   const ObjectiveCard({
     required this.title,
-    required this.subtitle,
-    required this.progress,
+    required this.data,
+    required this.navigation,
+    required this.isCheck,
+    required this.projectTitle,
   });
 
   @override
@@ -32,15 +36,23 @@ class _ObjectiveCardState extends State<ObjectiveCard> {
         margin: EdgeInsets.only(top: 20.0),
         child: ListTile(
           onTap: () {
-            Navigator.push(
+            widget.navigation ? Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EditObjective()),
-            );
+              MaterialPageRoute(builder: (context) =>
+                  EditObjective(
+                    data: widget.data,
+                    isCheck: widget.isCheck,
+                    title: widget.title,
+                    projectTitle: widget.projectTitle,
+                  )
+              ),
+            ) : "";
           },
           leading: Checkbox(
-            value: _check,
+            value: widget.isCheck,
             onChanged: (value) {
               setState(() {
+                //TODO Cambiar estado en BD
                 _check = value!;
               });
             },
@@ -55,7 +67,7 @@ class _ObjectiveCardState extends State<ObjectiveCard> {
             ),
           ),
           subtitle: Text(
-            widget.subtitle,
+            widget.data,
             style: TextStyle(
               color: Color(0xFF5D5D5D),
               fontFamily: GoogleFonts.oxygen().fontFamily,

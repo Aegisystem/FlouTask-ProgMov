@@ -98,9 +98,11 @@ class _EditProjectState extends State<EditProject> {
               itemBuilder: (context, index) {
                 var objective = widget.objectives[index];
                 return ObjectiveCard(
+                  projectTitle: widget.title,
                   title: objective["title"]!,
-                  subtitle: objective["data"]!,
-                  progress: widget.progress!,
+                  data: objective["data"]!,
+                  navigation: true,
+                  isCheck: objective["isChecked"]
                 );
               },
             ),

@@ -5,6 +5,18 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'objective_card.dart';
 
 class EditObjective extends StatefulWidget {
+  final String projectTitle;
+  final String title;
+  final String data;
+  final bool isCheck;
+
+  const EditObjective({
+    required this.title,
+    required this.data,
+    required this.isCheck,
+    required this.projectTitle,
+  });
+
   @override
   _EditObjectiveState createState() => _EditObjectiveState();
 }
@@ -52,7 +64,7 @@ class _EditObjectiveState extends State<EditObjective> {
             SizedBox(height: 40.0),
             Center(
               child: Text(
-                'Estructuras de Datos',
+                widget.projectTitle,
                 style: TextStyle(
                   fontSize: 30,
                   color: Colors.brown,
@@ -77,9 +89,11 @@ class _EditObjectiveState extends State<EditObjective> {
             ),
             SizedBox(height: 16.0),
             ObjectiveCard(
-              title: 'Conectar BD',
-              subtitle: 'Editando',
-              progress: 0.2
+              title: widget.title,
+              data: 'Editando',
+              navigation: false,
+              isCheck: widget.isCheck,
+              projectTitle: widget.projectTitle,
             ),
             SizedBox(height: 16.0),
             Expanded(
