@@ -43,6 +43,24 @@ class _EditProjectState extends State<EditProject> {
     }
   }
 
+  List filteredObjectives = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredObjectives = widget.objectives;
+  }
+
+  void filterObjectives(String searchText) {
+    setState(() {
+      filteredObjectives = widget.objectives.where((objective) {
+        final String title = objective['title'].toLowerCase();
+        final String data = objective['data'].toLowerCase();
+        return title.contains(searchText.toLowerCase()) || data.contains(searchText.toLowerCase());
+      }).toList();
+    });
+  }
+
   Widget build(BuildContext context) {
     final double progress = calculateProgress();
 
@@ -84,6 +102,9 @@ class _EditProjectState extends State<EditProject> {
                     child: TextField(
                       style: TextStyle(color: Colors.brown),
                       cursorColor: Colors.black,
+                      onChanged: (value) {
+                        filterObjectives(value);
+                      },
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
@@ -105,9 +126,9 @@ class _EditProjectState extends State<EditProject> {
             flex: 7,
             child: ListView.builder(
               padding: EdgeInsets.only(bottom: 15),
-              itemCount: widget.objectives.length,
+              itemCount: filteredObjectives.length,
               itemBuilder: (context, index) {
-                var objective = widget.objectives[index];
+                var objective = filteredObjectives[index];
                 return ObjectiveCard(
                   projectTitle: widget.title,
                   title: objective["title"]!,
@@ -134,7 +155,8 @@ class _EditProjectState extends State<EditProject> {
 
   Future<void> updateObjectiveCheckState(bool isChecked, int index) async {
     try {
-      final projectRef = FirebaseFirestore.instance.collection('projects').doc(widget.projectID);
+      final projectRef =
+      FirebaseFirestore.instance.collection('projects').doc(widget.projectID);
       final projectDoc = await projectRef.get();
 
       if (projectDoc.exists) {
@@ -143,19 +165,19 @@ class _EditProjectState extends State<EditProject> {
 
         await projectRef.update({'objectives': objectives});
 
-        final int completedObjectives = objectives.where((objective) => objective['isChecked'] == true).length;
+        final int completedObjectives =
+            objectives.where((objective) => objective['isChecked'] == true).length;
         final double newProgress = completedObjectives / objectives.length;
 
         await projectRef.update({'progress': newProgress});
 
         setState(() {
           // Actualizar el estado de los objetivos en el widget padre
-          widget.objectives[index]['isChecked'] = isChecked;
+          filteredObjectives[index]['isChecked'] = isChecked;
         });
       }
     } catch (e) {
       print('Error updating objective check state: $e');
     }
   }
-
 }
