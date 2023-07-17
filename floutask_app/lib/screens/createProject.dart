@@ -63,7 +63,6 @@ class _CreateProjectState extends State<CreateProject> {
         'progress': progress,
         'memberCount': memberCount,
         'objectives': objetivos,
-        'isChecked': false,
       });
 
       final String projectId = projectRef.id;

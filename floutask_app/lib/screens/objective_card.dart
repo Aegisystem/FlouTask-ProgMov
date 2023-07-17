@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:floutask_app/screens/in_objective.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +9,8 @@ class ObjectiveCard extends StatefulWidget {
   final String data;
   final bool navigation;
   final bool isCheck;
+  final int index;
+  final Function(bool) onCheckChanged;
 
   const ObjectiveCard({
     required this.title,
@@ -15,6 +18,8 @@ class ObjectiveCard extends StatefulWidget {
     required this.navigation,
     required this.isCheck,
     required this.projectTitle,
+    required this.index,
+    required this.onCheckChanged,
   });
 
   @override
@@ -22,7 +27,13 @@ class ObjectiveCard extends StatefulWidget {
 }
 
 class _ObjectiveCardState extends State<ObjectiveCard> {
-  bool _check = false;
+  bool _isCheck = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isCheck = widget.isCheck;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,25 +47,29 @@ class _ObjectiveCardState extends State<ObjectiveCard> {
         margin: EdgeInsets.only(top: 20.0),
         child: ListTile(
           onTap: () {
-            widget.navigation ? Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) =>
-                  EditObjective(
+            if (widget.navigation) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditObjective(
                     data: widget.data,
-                    isCheck: widget.isCheck,
+                    isCheck: _isCheck,
                     title: widget.title,
                     projectTitle: widget.projectTitle,
-                  )
-              ),
-            ) : "";
+                  ),
+                ),
+              );
+            }
           },
           leading: Checkbox(
-            value: widget.isCheck,
-            onChanged: (value) {
+            value: _isCheck,
+            onChanged: (value) async {
+              final updatedIsCheck = value ?? false;
               setState(() {
-                //TODO Cambiar estado en BD
-                _check = value!;
+                _isCheck = updatedIsCheck;
               });
+
+              widget.onCheckChanged(updatedIsCheck);
             },
             activeColor: Colors.green,
           ),
@@ -74,7 +89,7 @@ class _ObjectiveCardState extends State<ObjectiveCard> {
             ),
           ),
         ),
-      )
+      ),
     );
   }
 }

@@ -88,13 +88,13 @@ class _EditObjectiveState extends State<EditObjective> {
               barRadius: const Radius.circular(10.0),
             ),
             SizedBox(height: 16.0),
-            ObjectiveCard(
+            /*ObjectiveCard(
               title: widget.title,
               data: 'Editando',
               navigation: false,
               isCheck: widget.isCheck,
               projectTitle: widget.projectTitle,
-            ),
+            ),*/
             SizedBox(height: 16.0),
             Expanded(
               child: GestureDetector(

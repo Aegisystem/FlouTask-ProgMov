@@ -8,12 +8,14 @@ class ProjectPreview extends StatefulWidget {
   final double progress;
   final int members;
   final List objectives;
+  final String projectID;
 
   const ProjectPreview({
     required this.title,
     required this.progress,
     required this.members,
-    required this.objectives
+    required this.objectives,
+    required this.projectID,
   });
 
   @override
@@ -41,6 +43,7 @@ class _ProjectPreviewState extends State<ProjectPreview> {
                 objectives: widget.objectives,
                 title: widget.title,
                 progress: widget.progress,
+                projectID: widget.projectID,
               )),
             );
           },
