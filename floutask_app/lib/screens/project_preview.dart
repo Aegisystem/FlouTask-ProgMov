@@ -7,11 +7,13 @@ class ProjectPreview extends StatefulWidget {
   final String title;
   final double progress;
   final int members;
+  final List objectives;
 
   const ProjectPreview({
     required this.title,
     required this.progress,
-    required this.members
+    required this.members,
+    required this.objectives
   });
 
   @override
@@ -25,41 +27,46 @@ class _ProjectPreviewState extends State<ProjectPreview> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: Card(
-      elevation: 5.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      margin: EdgeInsets.only(top: 20.0),
-      child: ListTile(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => EditProject()),
-          );
-        },
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.brown,
-            fontFamily: GoogleFonts.oxygen().fontFamily,
-          ),
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
         ),
-        subtitle: LinearPercentIndicator(
-          alignment: MainAxisAlignment.center,
-          lineHeight: 8.0,
-          percent: widget.progress,
-          backgroundColor: Colors.grey,
-          linearGradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [Colors.brown, Colors.greenAccent]
+        margin: EdgeInsets.only(top: 20.0),
+        child: ListTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => EditProject(
+                members: widget.members,
+                objectives: widget.objectives,
+                title: widget.title,
+                progress: widget.progress,
+              )),
+            );
+          },
+          title: Text(
+            widget.title,
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.brown,
+              fontFamily: GoogleFonts.oxygen().fontFamily,
             ),
-          barRadius: const Radius.circular(10.0),
           ),
-        trailing: Icon(widget.members>1?Icons.groups:Icons.person),
-      ),
-    )
+          subtitle: LinearPercentIndicator(
+            alignment: MainAxisAlignment.center,
+            lineHeight: 8.0,
+            percent: widget.progress,
+            backgroundColor: Colors.grey,
+            linearGradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Colors.brown, Colors.greenAccent]
+              ),
+            barRadius: const Radius.circular(10.0),
+            ),
+          trailing: Icon(widget.members>1?Icons.groups:Icons.person),
+        ),
+      )
     );
   }
 }

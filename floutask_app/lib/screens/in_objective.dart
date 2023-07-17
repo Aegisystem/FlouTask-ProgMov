@@ -79,6 +79,7 @@ class _EditObjectiveState extends State<EditObjective> {
             ObjectiveCard(
               title: 'Conectar BD',
               subtitle: 'Editando',
+              progress: 0.2
             ),
             SizedBox(height: 16.0),
             Expanded(

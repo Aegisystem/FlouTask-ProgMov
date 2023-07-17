@@ -5,10 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 class ObjectiveCard extends StatefulWidget {
   final String title;
   final String subtitle;
+  final double progress;
 
   const ObjectiveCard({
     required this.title,
     required this.subtitle,
+    required this.progress,
   });
 
   @override

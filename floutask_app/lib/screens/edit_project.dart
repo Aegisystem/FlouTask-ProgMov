@@ -1,18 +1,29 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:floutask_app/screens/objective_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class EditProject extends StatefulWidget {
+  final String title;
+  final double progress;
+  final int members;
+  final List objectives;
+
+  const EditProject({
+    required this.title,
+    required this.progress,
+    required this.members,
+    required this.objectives
+  });
+
   @override
   _EditProjectState createState() => _EditProjectState();
 }
 
 class _EditProjectState extends State<EditProject> {
-  bool _isButtonPressed = false;
-
   // Variable que almacena el array con los datos de cada objetivo
-  var objectives = [
+  var object = [
     {"title": "Objetivo 1", "subtitle": "Subtitulo 1"},
     {"title": "Objetivo 2", "subtitle": "Subtitulo 2"},
     {"title": "Objetivo 3", "subtitle": "Subtitulo 3"},
@@ -36,7 +47,7 @@ class _EditProjectState extends State<EditProject> {
               child: Column(
                 children: [
                   Text(
-                    'Estructuras de Datos',
+                    widget.title,
                     style: TextStyle(
                       fontSize: 30,
                       color: Colors.brown,
@@ -83,12 +94,13 @@ class _EditProjectState extends State<EditProject> {
             flex: 7,
             child: ListView.builder(
               padding: EdgeInsets.only(bottom: 15),
-              itemCount: objectives.length,
+              itemCount: widget.objectives.length,
               itemBuilder: (context, index) {
-                var objective = objectives[index];
+                var objective = widget.objectives[index];
                 return ObjectiveCard(
                   title: objective["title"]!,
-                  subtitle: objective["subtitle"]!,
+                  subtitle: objective["data"]!,
+                  progress: widget.progress!,
                 );
               },
             ),

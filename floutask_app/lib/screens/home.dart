@@ -133,6 +133,7 @@ class _HomeState extends State<Home> {
                         title: projectData['projectName'].toString(),
                         progress: projectData['progress'].toDouble(),
                         members: projectData['memberCount'],
+                        objectives: projectData['objectives'],
                       );
                     },
                   );
