@@ -119,7 +119,7 @@ class _CreateProjectState extends State<CreateProject> {
                     const SizedBox(height: 30),
                     TextFormField(
                       controller: projectNameController,
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.black,fontFamily: GoogleFonts.oxygen().fontFamily,),
                       decoration: const InputDecoration(
                         labelText: 'Nombre de tu proyecto 💁‍♂',
                         filled: true,
