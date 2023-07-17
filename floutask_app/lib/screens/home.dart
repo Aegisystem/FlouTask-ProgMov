@@ -19,7 +19,17 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool _isButtonPressed = false;
   final CollectionReference _projectsCollection =
-      FirebaseFirestore.instance.collection('projects');
+  FirebaseFirestore.instance.collection('projects');
+  late Stream<QuerySnapshot> _projectsStream;
+  TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _projectsStream = _projectsCollection
+        .where('userId', isEqualTo: widget.user.uid)
+        .snapshots();
+  }
 
   void _cerrarSesion() async {
     // Cerrar sesión con FirebaseAuth
@@ -29,6 +39,16 @@ class _HomeState extends State<Home> {
       context,
       MaterialPageRoute(builder: (context) => Login()),
     );
+  }
+
+  void _filterProjects(String searchText) {
+    setState(() {
+      _projectsStream = _projectsCollection
+          .where('userId', isEqualTo: widget.user.uid)
+          .where('projectName', isGreaterThanOrEqualTo: searchText)
+          .where('projectName', isLessThanOrEqualTo: searchText + '\uf8ff')
+          .snapshots();
+    });
   }
 
   @override
@@ -51,8 +71,12 @@ class _HomeState extends State<Home> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 50.0),
             child: TextField(
+              controller: _searchController,
               style: TextStyle(color: Colors.brown),
               cursorColor: Colors.black,
+              onChanged: (value) {
+                _filterProjects(value);
+              },
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -110,9 +134,7 @@ class _HomeState extends State<Home> {
           Expanded(
             flex: 10,
             child: StreamBuilder<QuerySnapshot>(
-              stream: _projectsCollection
-                  .where('userId', isEqualTo: widget.user.uid)
-                  .snapshots(),
+              stream: _projectsStream,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');

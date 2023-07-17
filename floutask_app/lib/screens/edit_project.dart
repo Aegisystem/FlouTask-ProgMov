@@ -42,6 +42,24 @@ class _EditProjectState extends State<EditProject> {
     }
   }
 
+  List filteredObjectives = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredObjectives = widget.objectives;
+  }
+
+  void filterObjectives(String searchText) {
+    setState(() {
+      filteredObjectives = widget.objectives.where((objective) {
+        final String title = objective['title'].toLowerCase();
+        final String data = objective['data'].toLowerCase();
+        return title.contains(searchText.toLowerCase()) || data.contains(searchText.toLowerCase());
+      }).toList();
+    });
+  }
+
   Widget build(BuildContext context) {
     final double progress = calculateProgress();
 
@@ -79,21 +97,24 @@ class _EditProjectState extends State<EditProject> {
                       ),
                       barRadius: const Radius.circular(10.0),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: TextField(
-                        style: TextStyle(color: Colors.brown),
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Busca dentro de tu objetivo 👹',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          suffixIcon: Icon(Icons.search, color: Colors.black),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            borderSide: BorderSide.none,
-                          ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextField(
+                      style: TextStyle(color: Colors.brown),
+                      cursorColor: Colors.black,
+                      onChanged: (value) {
+                        filterObjectives(value);
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Busca dentro de tu proyecto :)',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        suffixIcon: Icon(Icons.search, color: Colors.black),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: BorderSide.none,
                         ),
                       ),
                     ),
@@ -106,13 +127,13 @@ class _EditProjectState extends State<EditProject> {
             flex: 7,
             child: ListView.builder(
               padding: EdgeInsets.only(bottom: 15),
-              itemCount: widget.objectives.length,
+              itemCount: filteredObjectives.length,
               itemBuilder: (context, index) {
-                var objective = widget.objectives[index];
+                var objective = filteredObjectives[index];
                 return ObjectiveCard(
                   projectTitle: widget.title,
                   title: objective["title"]!,
-                  data: objective["data"]!,
+                  data: truncateString(objective["data"]!),
                   navigation: true,
                   isCheck: objective["isChecked"] ?? false,
                   index: index,
@@ -131,6 +152,15 @@ class _EditProjectState extends State<EditProject> {
         ],
       ),
     );
+  }
+
+  String truncateString(String input, {int wordLimit = 6}) {
+    final words = input.split(' ');
+    if (words.length <= wordLimit) {
+      return input;
+    }
+    final truncatedWords = words.sublist(0, wordLimit);
+    return truncatedWords.join(' ') + '...';
   }
 
   Future<void> updateObjectiveCheckState(bool isChecked, int index) async {
@@ -155,7 +185,7 @@ class _EditProjectState extends State<EditProject> {
 
         setState(() {
           // Actualizar el estado de los objetivos en el widget padre
-          widget.objectives[index]['isChecked'] = isChecked;
+          filteredObjectives = objectives;
         });
       }
     } catch (e) {
