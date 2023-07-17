@@ -11,112 +11,89 @@ class EditProject extends StatefulWidget {
 class _EditProjectState extends State<EditProject> {
   bool _isButtonPressed = false;
 
+  // Variable que almacena el array con los datos de cada objetivo
+  var objectives = [
+    {"title": "Objetivo 1", "subtitle": "Subtitulo 1"},
+    {"title": "Objetivo 2", "subtitle": "Subtitulo 2"},
+    {"title": "Objetivo 3", "subtitle": "Subtitulo 3"},
+    {"title": "Objetivo 4", "subtitle": "Subtitulo 4"},
+    {"title": "Objetivo 5", "subtitle": "Subtitulo 5"},
+    {"title": "Objetivo 6", "subtitle": "Subtitulo 6"},
+    {"title": "Objetivo 7", "subtitle": "Subtitulo 7"},
+    // Agrega más objetivos aquí
+  ];
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFE2C6A9),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 40.0),
-            Flexible(
-              flex: 2,
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child:
-
-                Column(
-                  children:[
-                    Text(
-                      'Estructuras de Datos',
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.brown,
-                        fontFamily: GoogleFonts.oxygen().fontFamily,
-                      ),
+      body: Column(
+        children: [
+          SizedBox(height: 40.0),
+          Flexible(
+            flex: 2,
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Text(
+                    'Estructuras de Datos',
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.brown,
+                      fontFamily: GoogleFonts.oxygen().fontFamily,
                     ),
-                    LinearPercentIndicator(
-                      alignment: MainAxisAlignment.center,
-                      padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
-                      width: 250.0,
-                      lineHeight: 30.0,
-                      percent: 0.3,
-                      backgroundColor: Colors.grey,
-                      linearGradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [Colors.green, Colors.greenAccent],
-                      ),
-                      barRadius: const Radius.circular(10.0),
+                  ),
+                  LinearPercentIndicator(
+                    alignment: MainAxisAlignment.center,
+                    padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
+                    width: 250.0,
+                    lineHeight: 30.0,
+                    percent: 0.3,
+                    backgroundColor: Colors.grey,
+                    linearGradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [Colors.green, Colors.greenAccent],
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: TextField(
-                        style: TextStyle(color: Colors.brown),
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Busca dentro de tu proyecto :)',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          suffixIcon: Icon(Icons.search, color: Colors.black),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            borderSide: BorderSide.none,
-                          ),
+                    barRadius: const Radius.circular(10.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextField(
+                      style: TextStyle(color: Colors.brown),
+                      cursorColor: Colors.black,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Busca dentro de tu proyecto :)',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        suffixIcon: Icon(Icons.search, color: Colors.black),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: BorderSide.none,
                         ),
                       ),
                     ),
-                    SizedBox(height: 16.0),
-                    GestureDetector(
-                      onTapDown: (_) {
-                        setState(() {
-                          _isButtonPressed = true;
-                        });
-                      },
-                      onTapUp: (_) {
-                        setState(() {
-                          _isButtonPressed = false;
-                        });
-                      },
-                      onTapCancel: () {
-                        setState(() {
-                          _isButtonPressed = false;
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        transform: Matrix4.identity()
-                          ..scale(_isButtonPressed ? 1.2 : 1.0),
-                        child: CircleAvatar(
-                          radius: 20.0,
-                          backgroundColor: Colors.white,
-                          child: IconButton(
-                            icon: Icon(Icons.add_sharp),
-                            color: Colors.brown,
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/addproject.dart');
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                    const ObjectiveCard(
-                      title: 'Conectar BD',
-                      subtitle: 'Para conectar la base de datos debes seguir estos pasos',
-                    ),
-                    const ObjectiveCard(
-                      title: 'Otra tarjeta',
-                      subtitle: 'Descripción de la otra tarjeta...',
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            flex: 7,
+            child: ListView.builder(
+              padding: EdgeInsets.only(bottom: 15),
+              itemCount: objectives.length,
+              itemBuilder: (context, index) {
+                var objective = objectives[index];
+                return ObjectiveCard(
+                  title: objective["title"]!,
+                  subtitle: objective["subtitle"]!,
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

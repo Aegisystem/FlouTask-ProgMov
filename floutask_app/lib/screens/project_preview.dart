@@ -19,7 +19,6 @@ class ProjectPreview extends StatefulWidget {
 }
 
 class _ProjectPreviewState extends State<ProjectPreview> {
-  bool _check = false;
 
   @override
   Widget build(BuildContext context) {

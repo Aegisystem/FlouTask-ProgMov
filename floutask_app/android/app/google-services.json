@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "44049953983-mp3s2a357jhjau0rrijf2ekt155n6mlg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.floutask.app",
+            "certificate_hash": "154ae51d3a4d0f4760ca44429710b9fab6bfe8c4"
+          }
+        },
+        {
           "client_id": "44049953983-oinpen6v1pdbvu2ccib7b99bik1dm797.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
