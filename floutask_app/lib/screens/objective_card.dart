@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:floutask_app/screens/in_objective.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +10,8 @@ class ObjectiveCard extends StatefulWidget {
   final bool isCheck;
   final int index;
   final Function(bool) onCheckChanged;
+  final projectProgress;
+  final projectID;
 
   const ObjectiveCard({
     required this.title,
@@ -20,6 +21,8 @@ class ObjectiveCard extends StatefulWidget {
     required this.projectTitle,
     required this.index,
     required this.onCheckChanged,
+    required this.projectProgress,
+    required this.projectID,
   });
 
   @override
@@ -28,11 +31,13 @@ class ObjectiveCard extends StatefulWidget {
 
 class _ObjectiveCardState extends State<ObjectiveCard> {
   bool _isCheck = false;
+  late String data = '';
 
   @override
   void initState() {
     super.initState();
     _isCheck = widget.isCheck;
+    data = widget.data;
   }
 
   @override
@@ -52,10 +57,11 @@ class _ObjectiveCardState extends State<ObjectiveCard> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditObjective(
-                    data: widget.data,
-                    isCheck: _isCheck,
                     title: widget.title,
                     projectTitle: widget.projectTitle,
+                    projectProgress: widget.projectProgress,
+                    projectID: widget.projectID,
+                    index: widget.index,
                   ),
                 ),
               );
@@ -82,7 +88,7 @@ class _ObjectiveCardState extends State<ObjectiveCard> {
             ),
           ),
           subtitle: Text(
-            widget.data,
+            data,
             style: TextStyle(
               color: Color(0xFF5D5D5D),
               fontFamily: GoogleFonts.oxygen().fontFamily,

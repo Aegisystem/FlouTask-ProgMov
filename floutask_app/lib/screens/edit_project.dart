@@ -25,7 +25,27 @@ class EditProject extends StatefulWidget {
 }
 
 class _EditProjectState extends State<EditProject> {
+  double calculateProgress() {
+    final List objectives = widget.objectives;
+    final int totalObjectives = objectives.length;
+    int completedObjectives = 0;
+
+    for (var objective in objectives) {
+      if (objective['isChecked'] == true) {
+        completedObjectives++;
+      }
+    }
+
+    if (totalObjectives > 0) {
+      return completedObjectives / totalObjectives;
+    } else {
+      return 0.0;
+    }
+  }
+
   Widget build(BuildContext context) {
+    final double progress = calculateProgress();
+
     return Scaffold(
       backgroundColor: Color(0xFFE2C6A9),
       body: Column(
@@ -50,12 +70,12 @@ class _EditProjectState extends State<EditProject> {
                     padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
                     width: 250.0,
                     lineHeight: 30.0,
-                    percent: 0.3,
+                    percent: progress,
                     backgroundColor: Colors.grey,
                     linearGradient: LinearGradient(
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
-                      colors: [Colors.green, Colors.greenAccent],
+                      colors: [Colors.brown, Colors.greenAccent],
                     ),
                     barRadius: const Radius.circular(10.0),
                   ),
@@ -101,6 +121,8 @@ class _EditProjectState extends State<EditProject> {
                     });
                     updateObjectiveCheckState(isChecked, index);
                   },
+                  projectProgress: progress,
+                  projectID: widget.projectID,
                 );
               },
             ),
@@ -120,9 +142,20 @@ class _EditProjectState extends State<EditProject> {
         objectives[index]['isChecked'] = isChecked;
 
         await projectRef.update({'objectives': objectives});
+
+        final int completedObjectives = objectives.where((objective) => objective['isChecked'] == true).length;
+        final double newProgress = completedObjectives / objectives.length;
+
+        await projectRef.update({'progress': newProgress});
+
+        setState(() {
+          // Actualizar el estado de los objetivos en el widget padre
+          widget.objectives[index]['isChecked'] = isChecked;
+        });
       }
     } catch (e) {
       print('Error updating objective check state: $e');
     }
   }
+
 }
