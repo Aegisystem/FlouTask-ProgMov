@@ -152,7 +152,7 @@ class _HomeState extends State<Home> {
                     itemCount: projects.length,
                     itemBuilder: (context, index) {
                       var projectData =
-                      projects[index].data() as Map<String, dynamic>;
+                          projects[index].data() as Map<String, dynamic>;
                       return ProjectPreview(
                         title: projectData['projectName'].toString(),
                         progress: projectData['progress'].toDouble(),

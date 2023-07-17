@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-//sergatito
+
 
 class Login extends StatelessWidget {
   @override
@@ -40,6 +40,7 @@ class Login extends StatelessWidget {
                 },
                 color: Colors.white,
                 height: 50,
+                textColor: Colors.brown,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -55,7 +56,6 @@ class Login extends StatelessWidget {
                     ),
                   ],
                 ),
-                textColor: Colors.brown,
               ),
             ),
           ),
