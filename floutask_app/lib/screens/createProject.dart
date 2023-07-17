@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:floutask_app/screens/project_preview.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'login.dart';
 
 class CreateProject extends StatefulWidget {
@@ -11,6 +13,7 @@ class CreateProject extends StatefulWidget {
   _CreateProjectState createState() => _CreateProjectState();
 }
 
+// Este widget permite crear un proyecto nuevo en la base de datos de Firestore
 class _CreateProjectState extends State<CreateProject> {
   final List objetivos = [];
   final TextEditingController objetivoController = TextEditingController();
@@ -22,12 +25,13 @@ class _CreateProjectState extends State<CreateProject> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _projectsCollection =
-  FirebaseFirestore.instance.collection('projects');
+      FirebaseFirestore.instance.collection('projects');
 
+  // Se descartan los controladores cuando se destruye el widget
   @override
   void dispose() {
-    objetivoController.dispose();
-    projectNameController.dispose();
+    objetivoController.clear();
+    projectNameController.clear();
     _scrollController.dispose();
     super.dispose();
   }
@@ -48,15 +52,18 @@ class _CreateProjectState extends State<CreateProject> {
     });
   }
 
+  // Se guarda el proyecto en la base de datos de Firestore
+
   Future<void> guardarProyecto() async {
     Navigator.pop(context);
-
+    // Se obtiene el usuario actual
     final User? user = FirebaseAuth.instance.currentUser;
+
     if (user != null) {
+      // Se crea un nuevo documento para el proyecto
       final String projectName = projectNameController.text;
       final int progress = 0;
       final int memberCount = selectedMemberCount;
-
       final DocumentReference projectRef = await _projectsCollection.add({
         'userId': user.uid,
         'projectName': projectName,
@@ -65,6 +72,8 @@ class _CreateProjectState extends State<CreateProject> {
         'objectives': objetivos,
       });
 
+      // Se guarda el ID del proyecto en la base de datos
+
       final String projectId = projectRef.id;
 
       projectNameController.clear();
@@ -72,6 +81,8 @@ class _CreateProjectState extends State<CreateProject> {
       objetivos.clear();
     }
   }
+
+  // Se muestra la pantalla de creación de proyecto
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +121,7 @@ class _CreateProjectState extends State<CreateProject> {
                       controller: projectNameController,
                       style: TextStyle(color: Colors.black),
                       decoration: const InputDecoration(
-                        labelText: 'NOMBRE DEL PROYECTO',
+                        labelText: 'Nombre de tu proyecto 💁‍♂',
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -124,7 +135,7 @@ class _CreateProjectState extends State<CreateProject> {
                     ),
                     const SizedBox(height: 30),
                     const Text(
-                      "Listar objetivos del proyecto",
+                      "Listar objetivos del proyecto ✔️",
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -137,9 +148,9 @@ class _CreateProjectState extends State<CreateProject> {
                         Expanded(
                           child: TextFormField(
                             controller: objetivoController,
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(color: Colors.black, fontFamily: GoogleFonts.oxygen().fontFamily,),
                             decoration: const InputDecoration(
-                              labelText: 'OBJETIVOS',
+                              labelText: 'Objetivos 🤓',
                               filled: true,
                               fillColor: Colors.white,
                               border: OutlineInputBorder(
@@ -173,7 +184,7 @@ class _CreateProjectState extends State<CreateProject> {
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      'OPCIONES DE COMPARTIR',
+                      'Opciones de compartir 🫂',
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -192,7 +203,7 @@ class _CreateProjectState extends State<CreateProject> {
                             });
                           },
                           items: memberCounts.map<DropdownMenuItem<int>>(
-                                (int value) {
+                            (int value) {
                               return DropdownMenuItem<int>(
                                 value: value,
                                 child: Text(value.toString()),
@@ -212,18 +223,45 @@ class _CreateProjectState extends State<CreateProject> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
-                onPressed: guardarProyecto,
+                onPressed: () {
+                  if (objetivos.isEmpty || projectNameController.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CupertinoAlertDialog(
+                          title: const Text('Error',
+                              style: TextStyle(color: Colors.brown)),
+                          content: const Text(
+                              'Debes llenar todos los espacios para poder crear el proyecto',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 15)),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text(
+                                'OK LO HARÉ',
+                                style: TextStyle(color: Colors.brown),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    guardarProyecto();
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 18),
-                  primary: Colors.green,
+                  primary: Colors.brown,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   elevation: 4,
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.green,
+                    color: Colors.brown,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.brown.withOpacity(0),
@@ -238,20 +276,28 @@ class _CreateProjectState extends State<CreateProject> {
                       Positioned(
                         top: 2,
                         left: 2,
-                        child: Text(
-                          'CREAR PROYECTO',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.5),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            'Crea tu proyecto',
+                            style: TextStyle(
+                              color: Colors.brown.withOpacity(0.1),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: GoogleFonts.oxygen().fontFamily,
+                            ),
                           ),
                         ),
                       ),
-                      Text(
-                        'CREAR PROYECTO',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          'Crea tu proyecto 😁',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: GoogleFonts.oxygen().fontFamily,
+                          ),
                         ),
                       ),
                     ],
@@ -288,7 +334,7 @@ class ObjetivoWidget extends StatelessWidget {
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text(objetivo, style: TextStyle(color: Colors.brown)),
+            child: Text(objetivo, style: TextStyle(color: Colors.brown,fontFamily: GoogleFonts.oxygen().fontFamily,),),
           ),
         ),
         IconButton(

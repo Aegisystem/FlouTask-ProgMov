@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:floutask_app/screens/edit_project.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +10,8 @@ class ProjectPreview extends StatefulWidget {
   final int members;
   final List objectives;
   final String projectID;
+  final User user;
+
 
   const ProjectPreview({
     required this.title,
@@ -16,6 +19,7 @@ class ProjectPreview extends StatefulWidget {
     required this.members,
     required this.objectives,
     required this.projectID,
+    required this.user,
   });
 
   @override
@@ -52,6 +56,7 @@ class _ProjectPreviewState extends State<ProjectPreview> {
             style: TextStyle(
               fontSize: 20,
               color: Colors.brown,
+              fontWeight: FontWeight.bold,
               fontFamily: GoogleFonts.oxygen().fontFamily,
             ),
           ),
@@ -67,7 +72,12 @@ class _ProjectPreviewState extends State<ProjectPreview> {
               ),
             barRadius: const Radius.circular(10.0),
             ),
-          trailing: Icon(widget.members>1?Icons.groups:Icons.person),
+          trailing: widget.members == 1
+              ? CircleAvatar(
+            backgroundImage: NetworkImage(widget.user.photoURL!),
+          )
+              : Icon(Icons.groups, color: Colors.brown),
+
         ),
       )
     );

@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                hintText: 'Busca en tus proyectos :)',
+                hintText: 'Busca en tus proyectos 😊',
                 hintStyle: TextStyle(color: Colors.grey),
                 suffixIcon: Icon(Icons.search, color: Colors.black),
                 border: OutlineInputBorder(
@@ -134,7 +134,7 @@ class _HomeState extends State<Home> {
                         progress: projectData['progress'].toDouble(),
                         members: projectData['memberCount'],
                         objectives: projectData['objectives'],
-                        projectID: projects[index].id,
+                        projectID: projects[index].id, user: widget.user,
                       );
                     },
                   );
