@@ -20,45 +20,47 @@ class _ObjectiveCardState extends State<ObjectiveCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      margin: EdgeInsets.only(top: 20.0),
-      child: ListTile(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => EditObjective()),
-          );
-        },
-        leading: Checkbox(
-          value: _check,
-          onChanged: (value) {
-            setState(() {
-              _check = value!;
-            });
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        margin: EdgeInsets.only(top: 20.0),
+        child: ListTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => EditObjective()),
+            );
           },
-          activeColor: Colors.green,
-        ),
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.brown,
-            fontFamily: GoogleFonts.oxygen().fontFamily,
+          leading: Checkbox(
+            value: _check,
+            onChanged: (value) {
+              setState(() {
+                _check = value!;
+              });
+            },
+            activeColor: Colors.green,
+          ),
+          title: Text(
+            widget.title,
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.brown,
+              fontFamily: GoogleFonts.oxygen().fontFamily,
+            ),
+          ),
+          subtitle: Text(
+            widget.subtitle,
+            style: TextStyle(
+              color: Color(0xFF5D5D5D),
+              fontFamily: GoogleFonts.oxygen().fontFamily,
+            ),
           ),
         ),
-        subtitle: Text(
-          widget.subtitle,
-          style: TextStyle(
-            color: Color(0xFF5D5D5D),
-            fontFamily: GoogleFonts.oxygen().fontFamily,
-          ),
-        ),
-        trailing: Icon(Icons.more_vert),
-      ),
+      )
     );
   }
 }
