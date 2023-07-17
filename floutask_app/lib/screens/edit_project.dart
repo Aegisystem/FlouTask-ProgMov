@@ -132,7 +132,7 @@ class _EditProjectState extends State<EditProject> {
                 return ObjectiveCard(
                   projectTitle: widget.title,
                   title: objective["title"]!,
-                  data: objective["data"]!,
+                  data: truncateString(objective["data"]!),
                   navigation: true,
                   isCheck: objective["isChecked"] ?? false,
                   index: index,
@@ -153,10 +153,18 @@ class _EditProjectState extends State<EditProject> {
     );
   }
 
+  String truncateString(String input, {int wordLimit = 6}) {
+    final words = input.split(' ');
+    if (words.length <= wordLimit) {
+      return input;
+    }
+    final truncatedWords = words.sublist(0, wordLimit);
+    return truncatedWords.join(' ') + '...';
+  }
+
   Future<void> updateObjectiveCheckState(bool isChecked, int index) async {
     try {
-      final projectRef =
-      FirebaseFirestore.instance.collection('projects').doc(widget.projectID);
+      final projectRef = FirebaseFirestore.instance.collection('projects').doc(widget.projectID);
       final projectDoc = await projectRef.get();
 
       if (projectDoc.exists) {
@@ -165,15 +173,14 @@ class _EditProjectState extends State<EditProject> {
 
         await projectRef.update({'objectives': objectives});
 
-        final int completedObjectives =
-            objectives.where((objective) => objective['isChecked'] == true).length;
+        final int completedObjectives = objectives.where((objective) => objective['isChecked'] == true).length;
         final double newProgress = completedObjectives / objectives.length;
 
         await projectRef.update({'progress': newProgress});
 
         setState(() {
           // Actualizar el estado de los objetivos en el widget padre
-          filteredObjectives[index]['isChecked'] = isChecked;
+          filteredObjectives = objectives;
         });
       }
     } catch (e) {
