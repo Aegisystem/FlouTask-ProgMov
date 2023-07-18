@@ -55,8 +55,7 @@ class _EditProjectState extends State<EditProject> {
       filteredObjectives = widget.objectives.where((objective) {
         final String title = objective['title'].toLowerCase();
         final String data = objective['data'].toLowerCase();
-        return title.contains(searchText.toLowerCase()) ||
-            data.contains(searchText.toLowerCase());
+        return title.contains(searchText.toLowerCase()) || data.contains(searchText.toLowerCase());
       }).toList();
     });
   }
@@ -98,27 +97,27 @@ class _EditProjectState extends State<EditProject> {
                       ),
                       barRadius: const Radius.circular(10.0),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: TextField(
-                        style: TextStyle(color: Colors.brown),
-                        cursorColor: Colors.black,
-                        onChanged: (value) {
-                          filterObjectives(value);
-                        },
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Busca dentro de tu objetivo 😈',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          suffixIcon: Icon(Icons.search, color: Colors.black),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            borderSide: BorderSide.none,
-                          ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextField(
+                      style: TextStyle(color: Colors.brown),
+                      cursorColor: Colors.black,
+                      onChanged: (value) {
+                        filterObjectives(value);
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Busca dentro de tu proyecto :)',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        suffixIcon: Icon(Icons.search, color: Colors.black),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: BorderSide.none,
                         ),
                       ),
                     ),
+                  ),
                   ],
                 ),
               ),

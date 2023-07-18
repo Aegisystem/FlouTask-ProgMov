@@ -43,8 +43,18 @@ dependencies:
   change_app_package_name: ^1.1.0
 
 dev_dependencies:
+
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
+
+    android : true
+    ios: false
+    image_path: "assets/images/iconSquare.png"
+
+
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -52,7 +62,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
